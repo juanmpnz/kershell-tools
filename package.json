@@ -1,0 +1,12 @@
+{
+  "name": "kershell-tools",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "dev": "pnpm --filter @kershell/web dev",
+    "build": "pnpm --filter @kershell/web build",
+    "typecheck": "pnpm --filter @kershell/calculators typecheck && pnpm --filter @kershell/web typecheck",
+    "test": "pnpm --filter @kershell/calculators test"
+  }
+}
