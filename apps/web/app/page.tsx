@@ -14,6 +14,10 @@ export default function HomePage() {
           <div><span className="tool-number">01 — INVERSIÓN</span><h3>Rentabilidad de alquiler</h3><p>Calcula la rentabilidad bruta y neta estimada con los gastos de compra, los meses sin inquilino y los costes anuales.</p></div>
           <span className="card-arrow" aria-hidden="true">↗</span>
         </Link>
+        <Link href="/gastos-compra-vivienda-cataluna" className="tool-card">
+          <div><span className="tool-number">02 — COMPRA</span><h3>Gastos de compra en Cataluña</h3><p>Estima los impuestos de vivienda usada o nueva, añade tus presupuestos y calcula el dinero propio necesario.</p></div>
+          <span className="card-arrow" aria-hidden="true">↗</span>
+        </Link>
       </section>
     </div>
   );
