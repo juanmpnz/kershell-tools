@@ -4,18 +4,23 @@ export default function HomePage() {
   return (
     <div className="page-shell">
       <section className="hero">
-        <p className="eyebrow">KERSHELL · VIVIENDA</p>
+        <p className="eyebrow">KERSHELL · DECISIONES CON NÚMEROS</p>
         <h1>Las cuentas claras antes de decidir.</h1>
-        <p className="hero-copy">Herramientas sencillas para entender el dinero detrás de una vivienda. Introduce tus cifras y ve cómo se calcula cada resultado.</p>
+        <p className="hero-copy">Herramientas sencillas para entender decisiones de vivienda y trabajo. Introduce tus cifras y ve cómo se calcula cada resultado.</p>
       </section>
       <section className="tool-list" aria-labelledby="tools-heading">
-        <div className="section-heading"><h2 id="tools-heading">Herramientas disponibles</h2><span>01 / Vivienda</span></div>
+        <div className="section-heading"><h2 id="tools-heading">Vivienda</h2><span>01 / Vivienda</span></div>
         <Link href="/rentabilidad-alquiler" className="tool-card">
           <div><span className="tool-number">01 — INVERSIÓN</span><h3>Rentabilidad de alquiler</h3><p>Calcula la rentabilidad bruta y neta estimada con los gastos de compra, los meses sin inquilino y los costes anuales.</p></div>
           <span className="card-arrow" aria-hidden="true">↗</span>
         </Link>
         <Link href="/gastos-compra-vivienda-cataluna" className="tool-card">
           <div><span className="tool-number">02 — COMPRA</span><h3>Gastos de compra en Cataluña</h3><p>Estima los impuestos de vivienda usada o nueva, añade tus presupuestos y calcula el dinero propio necesario.</p></div>
+          <span className="card-arrow" aria-hidden="true">↗</span>
+        </Link>
+        <div className="section-heading vertical-heading"><h2>Trabajo</h2><span>02 / Trabajo</span></div>
+        <Link href="/indemnizacion-despido" className="tool-card">
+          <div><span className="tool-number">03 — EMPLEO</span><h3>Indemnización por despido</h3><p>Estima los escenarios de despido objetivo e improcedente en España, con límites y régimen anterior a 2012.</p></div>
           <span className="card-arrow" aria-hidden="true">↗</span>
         </Link>
       </section>

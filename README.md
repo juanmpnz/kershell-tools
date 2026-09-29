@@ -1,6 +1,6 @@
 # Kershell Tools
 
-Herramientas claras para decisiones sobre vivienda: rentabilidad de alquiler y gastos de compra de vivienda en Cataluña. La calculadora de compra estima el régimen general de vivienda usada o nueva y muestra sus fuentes oficiales y límites.
+Herramientas claras para decisiones sobre vivienda y trabajo: rentabilidad de alquiler, gastos de compra de vivienda en Cataluña e indemnización por despido en España. Cada página muestra su método, fuentes y límites.
 
 ## Desarrollo
 
