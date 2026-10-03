@@ -24,3 +24,14 @@ La rentabilidad actual es anual, antes de impuestos y financiación. Los costes 
 ## Indemnización por despido (España)
 
 El vertical de trabajo cubre una decisión económica personal distinta, con una página propia y límites explícitos. `packages/calculators/src/dismissal-compensation.ts` calcula los dos escenarios generales (objetivo e improcedente), incluida la disposición transitoria 11 para contratos anteriores al 12-02-2012. No decide la calificación jurídica. El cliente no almacena ni transmite los datos introducidos. Fuentes: texto consolidado del Estatuto de los Trabajadores (arts. 53, 56 y 59, DT 11) en BOE y guía de la calculadora del CGPJ, consultados el 29-09-2026. Revisar ambos al menos trimestralmente y antes de modificar la fórmula. Comprobar también el criterio jurisprudencial para el salario regulador y la antigüedad; los casos de salario variable, discontinuidad o relación especial quedan expresamente excluidos.
+
+
+## Live / Parking: webcam propia
+
+`/live` presenta el vertical y `/live/parking` permite guardar una URL propia y mapear manualmente plazas de una cámara fija. El público son usuarios que quieren volver a consultar un parking de su elección. Se mantiene `noindex` mientras la detección es experimental, sin alterar las rutas ni las fórmulas de las calculadoras.
+
+La ruta usa `components/parking/parking-workspace.tsx`. `camera-feed.tsx` gestiona imágenes/vídeo/HLS y errores; `slot-map.tsx` edita polígonos normalizados; `use-vehicle-tracking.ts` ejecuta COCO-SSD bajo demanda; `lib/parking/camera.ts` valida la configuración y calcula la ocupación estimada. URL y mapa se guardan en localStorage; las imágenes y las inferencias permanecen en el navegador. No hay backend de visión ni proxy de URLs.
+
+Las dependencias de reproducción e inferencia se cargan dinámicamente. La descarga inicial del modelo y el consumo de CPU/GPU son costes del dispositivo del usuario, no del servidor de Kershell. La ausencia de un vehículo detectado no garantiza que la plaza esté vacía. Véanse [funcionamiento, fuentes y validación](./parking-live.md).
+
+El contrato y monitor de disponibilidad desarrollados anteriormente permanecen aislados y probados para una posible integración de proveedor; no gobiernan la nueva ruta pública y no hay un endpoint de disponibilidad desplegado.
