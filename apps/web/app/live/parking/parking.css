@@ -1,0 +1,14 @@
+.parking-page .breadcrumbs{flex-wrap:wrap}
+.parking-heading{gap:16px;flex-wrap:wrap}
+.parking-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:18px;align-items:start}
+.parking-summary{position:static}
+.parking-summary h3{font-size:24px;letter-spacing:-.04em;margin:7px 0}
+.parking-summary .hero-number{font-size:clamp(58px,6vw,86px)}
+.parking-summary .result-list div{flex-wrap:wrap;gap:4px 16px}
+.parking-meter{width:100%;height:16px;accent-color:var(--lime)}
+.parking-camera .panel-heading h3{font-size:32px;letter-spacing:-.05em;margin:7px 0}
+.parking-camera-placeholder{min-height:260px;border:1px dashed var(--line);border-radius:9px;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:12px}
+.parking-camera-placeholder p{color:var(--muted);font-size:14px;max-width:300px;margin:0}
+.parking-camera-symbol{display:grid;place-items:center;width:48px;height:48px;border-radius:9px;background:var(--forest);color:var(--lime);font-size:28px}
+@media(max-width:820px){.parking-grid{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.parking-page{scroll-behavior:auto}}

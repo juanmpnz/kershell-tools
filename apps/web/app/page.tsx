@@ -24,6 +24,13 @@ export default function HomePage() {
           <span className="card-arrow" aria-hidden="true">↗</span>
         </Link>
       </section>
+      <section className="tool-list" aria-labelledby="live-heading">
+        <div className="section-heading vertical-heading"><h2 id="live-heading">Live</h2><span>03 / En desarrollo</span></div>
+        <Link href="/live" className="tool-card">
+          <div><span className="tool-number">04 — DESTINOS</span><h3>Parking Live</h3><p>Un nuevo espacio para consultar el parking antes de llegar. Descubre la primera demostración con plazas de ejemplo y espacio para una webcam.</p></div>
+          <span className="card-arrow" aria-hidden="true">↗</span>
+        </Link>
+      </section>
     </div>
   );
 }
