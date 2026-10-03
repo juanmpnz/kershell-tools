@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@kershell/calculators": "workspace:*",
+    "@tensorflow-models/coco-ssd": "2.2.3",
+    "@tensorflow/tfjs-backend-cpu": "4.22.0",
+    "@tensorflow/tfjs-backend-webgl": "4.22.0",
+    "@tensorflow/tfjs-converter": "4.22.0",
+    "@tensorflow/tfjs-core": "4.22.0",
+    "hls.js": "1.6.13",
     "next": "16.3.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"

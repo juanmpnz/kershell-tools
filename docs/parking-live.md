@@ -1,70 +1,41 @@
-# Parking Live: contrato y fuente candidata
+# Parking Live: webcam propia y análisis local
 
-## Investigación — 3 de octubre de 2026
+## Cambio de producto: webcam propia (3 de octubre de 2026)
 
-La [página oficial de webcams](https://lesangles.com/es/webcam/) presenta Bas de station, Les Jassettes, Plateau de Bigorre, Roc d’Aude y Snowpark. El primer reproductor enlazado es [Viewsurf: Les Angles — Bas de Station](https://pv.viewsurf.com/2586/Les-Angles-Bas-de-station?i=ODY5MDp1bmRlZmluZWQ). Es una fuente candidata, no una cámara de parking validada: no se ha comprobado que el encuadre permita identificar todas las plazas, que sea fijo o que aporte capturas con la frecuencia requerida. Tampoco se ha verificado la capacidad de ningún parking.
+La ruta pública ahora ofrece una herramienta genérica, sin catálogo de destinos ni dependencia de Les Angles. El usuario confirmó mapear manualmente las cuatro esquinas de cada plaza una sola vez. La URL y los polígonos normalizados se guardan bajo `kershell.parking.camera.v1` en localStorage. Se valida el guardado al recuperarlo; los resultados de detección no persisten. Solo se guarda una cámara por navegador en esta versión. Cambiar URL o tipo de fuente empieza un mapa nuevo; «Olvidar cámara» elimina únicamente esta clave.
 
-Los [avisos legales de Les Angles](https://lesangles.com/mentions-legales/) reservan los derechos de reproducción y adaptación y exigen acuerdo previo expreso. No se ha obtenido autorización para embeber, capturar o analizar el contenido. La UI enlaza a la página oficial sin cargar recursos del proveedor. No existe aún una fuente apta y autorizada confirmada.
+### Recorrido y ejecución
 
-Contacto publicado en la página de webcams: lesanglesinfos@les-angles.com. No se ha enviado ningún mensaje. Antes de integrar, solicitar confirmación del titular y del proveedor sobre: reproducción del reproductor, acceso automatizado a capturas, generación y publicación comercial de datos derivados, frecuencia permitida y atribución. Pedir una fuente fija con fecha de captura y confirmar el área visible y las plazas calibradas.
+1. Elegir imagen, vídeo directo o HLS y guardar una URL pública HTTPS.
+2. Cargar la fuente en el navegador. No hay proxy que consulte URLs arbitrarias desde el servidor.
+3. Marcar cuadriláteros convexos (máximo 100) con ratón/táctil o flechas + Enter. Eliminar plazas individualmente si hace falta.
+4. Iniciar la detección. COCO-SSD (`lite_mobilenet_v2`) se descarga bajo demanda y usa TensorFlow.js WebGL, con CPU como alternativa. HLS usa HLS.js cuando el navegador lo permite y reproducción nativa como alternativa.
+5. Mostrar ocupadas, libres estimadas y desconocidas. La webcam y el mapa se recuperan al volver; el análisis se inicia explícitamente, para no cargar el modelo ni consumir GPU automáticamente.
 
-## Contrato interno v1
+Cada vehículo se vincula a una plaza si su punto de apoyo aproximado (centro horizontal, 80% de altura de su caja) cae en el polígono. Una detección ≥0,6 marca ocupación; entre 0,3 y 0,6 deja la plaza sin determinar. Ausencia de vehículo implica libre estimada, **no una garantía de vacío**. Estos umbrales son heurísticos y no confianza calibrada de ocupación. No se implementa identidad persistente de vehículos ni reconocimiento automático de líneas. No es un detector entrenado específicamente para cámaras de parking.
 
-Implementación: `apps/web/lib/parking/availability.ts`. No hay endpoint ni servicio de visión. El adaptador `readAvailability` recibe `unknown`, valida y produce un estado seguro para `ParkingAvailability`. La demo está separada en `demo.ts`: no debe convertirse en fallback de una fuente real.
+La inferencia se ejecuta secuencialmente cada tres segundos; imágenes se solicitan cada 60 segundos. Una fuente de imágenes podría publicar capturas menos frecuentes o congeladas: la UI distingue hora de análisis local de antigüedad de captura, que se declara desconocida. Vídeo pausado/finalizado/sin avance deja las plazas sin determinar. Al ocultar la pestaña se ocultan resultados y se pausa el análisis. Cambiar fuente, editar mapa o detener invalida resultados pendientes.
 
-Ejemplo de forma del contrato (todos los valores son ilustrativos):
+### Límites comprobados
 
-```json
-{
-  "version": 1,
-  "parkingId": "les-angles-pilot",
-  "sourceId": "camera-1",
-  "capturedAt": "2026-10-03T11:59:00.000Z",
-  "capacity": 100,
-  "available": 20,
-  "occupied": 70,
-  "unknown": 10,
-  "confidence": 0.9
-}
-```
+- [Glen Alps, Alaska](https://dnr.alaska.gov/parks/units/chugach/glenalpswebcam.htm) declara refresco de cinco minutos. Su [JPEG directo](https://dnr.alaska.gov/parks/units/chugach/glenalpscam/current2.jpg) devuelve HTTP 200 y se pudo visualizar en la app, pero bloquea lectura de píxeles cross-origin. Se muestra como **solo consulta**, con el seguimiento deshabilitado.
+- Se usa como prueba técnica de inferencia una imagen estática de vehículo del [repositorio de Ultralytics](https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/bus.jpg), que responde con CORS permitido. No es una webcam ni se incluye como fuente predeterminada del producto.
+- URLs de páginas, YouTube, iframes y RTSP no son entradas compatibles. No se intenta extraer streams ni eludir bloqueos del proveedor. Una URL pública no implica compatibilidad de análisis.
+- El modelo carga pesos desde la ubicación distribuida por TensorFlow; el proveedor de vídeo recibe las peticiones de reproducción normales. Las imágenes no se envían a Kershell ni a una API de inferencia.
+- La compatibilidad con una fuente no acredita permiso de reutilización; el producto pide usar fuentes que el usuario tenga derecho a utilizar.
 
-- `capacity`: número positivo de plazas calibradas en la zona visible, no capacidad total inferida del destino.
-- Los tres recuentos son enteros no negativos cuya suma debe igualar `capacity`. Una plaza oculta o dudosa pertenece a `unknown`, nunca se presupone libre.
-- `capturedAt`: fecha de la imagen original, UTC ISO-8601 con milisegundos. Se rechazan fechas inválidas, no canónicas o futuras. No sustituir por la hora de consulta.
-- `confidence`: estimación calibrada entre 0 y 1; `null` cuando no está medida. No equivale automáticamente al score de un detector.
-- `parkingId` debe coincidir con el destino solicitado y `sourceId` identificar una fuente no vacía.
-- La antigüedad máxima es una opción explícita (`maxAgeMs`), que se decidirá con la frecuencia acordada. Las pruebas usan 120 segundos como ejemplo, no como compromiso del producto.
+Referencias técnicas: [COCO-SSD oficial](https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd), [HLS.js oficial](https://github.com/video-dev/hls.js). Dependencias fijadas a versiones exactas, instaladas sin ejecutar scripts y revisadas con `pnpm audit --prod`.
 
-| Estado | Condición | Presentación |
-| --- | --- | --- |
-| demo | Fixture explícito sin fuente real | Cifras rotuladas como ejemplo; sin confianza ni fecha inventadas |
-| fresh | Lectura válida con edad menor al umbral | Recuentos, plazas sin determinar, confianza y fecha de captura |
-| stale | Edad igual o superior al umbral | Oculta recuentos actuales, conserva fecha de última captura |
-| unavailable | El proveedor devuelve `null`: sin observación | Guiones, nunca cero plazas |
-| error | Respuesta inválida | Guiones y fuente no disponible |
-
-Un futuro proveedor debe convertir timeouts/errores de red en `error`; nunca sustituirlos por datos de demo. La página actual continúa usando exclusivamente la demo y no realiza peticiones externas. La actualización periódica y la expiración del cliente ya están implementadas; antes de activar el modo real falta conectar y probar el endpoint con la fuente autorizada. Mantener sincronizadas las marcas temporales de la imagen y los recuentos, y cubrir fallos de red con pruebas del proveedor.
-
-## Validación
-
-`pnpm test` incluye las pruebas existentes de calculadoras y las del adaptador de parking mediante el runner de Node 24, sin nuevas dependencias. Se cubren caducidad exacta, fechas futuras, recuentos inválidos, plazas desconocidas, confianza ausente, identidad equivocada y distinción entre cero plazas y falta de datos.
+El contrato y monitor de las fases anteriores siguen siendo código probado para una futura integración de proveedor, pero ya no gobiernan la ruta pública ni implican que exista un endpoint activo.
 
 
-## Comprobación visual de Bas de station — 3 de octubre de 2026
+## Validaciones de esta entrega
 
-Se abrió la cámara mediante el botón oficial «Bas de station». En el encuadre observado aparecen el edificio de la estación, una rotonda y accesos, sin un conjunto suficiente de plazas delimitadas que permita validar un contador de disponibilidad. Esto describe solamente la imagen inspeccionada: no demuestra que todos los encuadres del proveedor sean iguales ni que ninguna otra cámara sirva. La fuente continúa sin aprobarse para el piloto. No se descargaron imágenes ni se activó captura periódica.
+- 48 tests: 19 de calculadoras y 29 de parking (contrato anterior, caducidad y configuración/geometría nuevas).
+- `pnpm typecheck`, `pnpm build` y `pnpm audit --prod`: correctos; sin vulnerabilidades conocidas notificadas.
+- Navegador: carga de Glen Alps como solo consulta; dibujo de un polígono sobre imagen técnica; detección de un vehículo como ocupado; recarga conserva URL y polígono pero no resultados; reproducción del [HLS de prueba oficial](https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8); URL inexistente muestra error; olvidar cámara persiste tras recarga.
+- Revisión a 320 y 1440 px sin desbordamiento horizontal. La configuración de prueba se eliminó al terminar.
 
-## Actualización del cliente
+## Siguiente paso técnico
 
-`ParkingLiveAvailability` separa explícitamente `mode: 'demo'` de `mode: 'live'`. La ruta pública sigue en demo y no inicia peticiones ni temporizadores. En modo live, el cliente espera un endpoint de nuestra propia aplicación: `/api/live/parking/{parkingId}`. Ese endpoint todavía no existe; no activar el modo live hasta implementar el proveedor autorizado. No se expone una URL configurable de terceros al navegador.
-
-`watchParking` aplica estas reglas, con pruebas de reloj controlado:
-
-- Una petición activa por monitor; siguiente consulta después de completarse la anterior.
-- Timeout configurable con cancelación; respuestas tardías no cambian el estado.
-- Caducidad independiente de la red: el contador desaparece al alcanzar la edad máxima, aunque la siguiente consulta siga pendiente.
-- Error de red o respuesta inválida: no muestra cifras anteriores ni introduce números de demo.
-- Al desmontar o esconder la pestaña, cancela la consulta y los temporizadores. Al volver a la pestaña consulta de nuevo, sin presentar el valor anterior como reciente.
-- Las consultas usan `cache: 'no-store'` y el futuro endpoint deberá responder también sin caché. Los tiempos se decidirán con el proveedor; no hay valores productivos fijados.
-
-Para integrar: implementar el endpoint con acceso de servidor a la fuente aprobada, límites de tiempo y respuestas del contrato v1; probar el modo live de extremo a extremo (incluidos timeout y recuperación); después cambiar la configuración de la página y su copy de demostración. La mera existencia del monitor no habilita datos reales.
+Validar con varias cámaras fijas de parkings reales que permitan lectura de píxeles: medir falsos libres/ocupados, ajustar el punto de apoyo y umbrales, y añadir estabilidad temporal. La prueba técnica confirma que el recorrido de inferencia funciona, no su precisión en cualquier parking. Antes de publicación, comprobar rendimiento en móviles y el consumo del modelo. Para fuentes con CORS bloqueado haría falta integración específica o una fuente alternativa; no introducir un proxy abierto de URLs.

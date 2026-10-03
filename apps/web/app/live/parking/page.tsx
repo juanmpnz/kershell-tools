@@ -1,51 +1,23 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ParkingWorkspace } from '@/components/parking/parking-workspace';
 import './parking.css';
-import { ParkingLiveAvailability } from '@/components/parking-live-availability';
-import { parkingDemo as demo } from '@/lib/parking/demo';
 
 export const metadata: Metadata = {
-  title: 'Parking Live · Demostración',
-  description: 'Primera vista de Parking Live: disponibilidad de ejemplo y espacio para una futura webcam. Sin datos en tiempo real todavía.',
+  title: 'Parking Live · Tu webcam, tus plazas',
+  description: 'Conecta una webcam compatible, marca las plazas y estima su ocupación en tu navegador. Guarda la cámara y el mapa en este dispositivo.',
   alternates: { canonical: '/live/parking' },
   robots: { index: false, follow: true },
 };
-
 export default function ParkingPage() {
-  return (
-    <div className="page-shell parking-page">
-      <nav className="breadcrumbs" aria-label="Ruta de navegación"><Link href="/">Herramientas</Link><span aria-hidden="true">/</span><Link href="/live">Live</Link><span aria-hidden="true">/</span><span aria-current="page">Parking</span></nav>
-      <section className="intro">
-        <p className="eyebrow">LIVE / PARKING</p>
-        <h1>Tu próxima parada, más clara.</h1>
-        <p>Consulta las plazas y comprueba el parking con su cámara. Así será Parking Live, empezando por destinos de montaña.</p>
-      </section>
-      <p className="deadline-note"><strong>Vista de demostración.</strong> Las cifras son ficticias y no representan la disponibilidad ni la capacidad real de Les Angles. No hay ninguna cámara conectada.</p>
-      <section aria-labelledby="parking-heading">
-        <div className="section-heading parking-heading"><div><p className="eyebrow">DESTINO PILOTO PROPUESTO</p><h2 id="parking-heading">{demo.destination}</h2></div><span>Integración pendiente</span></div>
-        <div className="parking-grid">
-          <ParkingLiveAvailability name={demo.name} source={{ mode: 'demo', availability: demo.availability }} />
-          <section className="form-panel parking-camera" aria-labelledby="camera-heading">
-            <div className="panel-heading"><p className="eyebrow">EVIDENCIA VISUAL</p><h3 id="camera-heading">Webcam del parking</h3><p>El espacio para comprobar lo que muestran los números.</p></div>
-            <div className="parking-camera-placeholder">
-              <span className="parking-camera-symbol" aria-hidden="true">↗</span>
-              <strong>Cámara pendiente de conexión</strong>
-              <p>Aquí podrás ver el parking cuando incorporemos una fuente autorizada.</p>
-            </div>
-            <p className="fine-print"><a href={demo.officialWebcamUrl} target="_blank" rel="noopener noreferrer">Consultar las webcams en la web oficial de Les Angles ↗</a></p>
-            <p className="fine-print">La webcam original y la vista con plazas señaladas estarán disponibles en una próxima fase. Esta demostración no reproduce vídeo ni realiza detecciones.</p>
-          </section>
-        </div>
-      </section>
-      <section className="explanation" aria-labelledby="destinations-heading">
-        <p className="eyebrow">PRÓXIMOS DESTINOS</p>
-        <h2 id="destinations-heading">Una primera parada. Espacio para más.</h2>
-        <div className="explanation-grid">
-          <div><h3>Les Angles</h3><p>Primer destino propuesto. Falta confirmar la cámara, la zona visible y las plazas que se podrán medir.</p></div>
-          <div><h3>Más parkings de montaña</h3><p>Este espacio crecerá con nuevas ubicaciones cuando tengamos fuentes verificadas y una detección fiable.</p></div>
-        </div>
-        <p className="fine-print">La disponibilidad futura será una estimación: nieve, visibilidad o vehículos fuera del encuadre pueden afectar a la lectura. Mostraremos la antigüedad del dato y su confianza para ayudarte a interpretarlo.</p>
-      </section>
-    </div>
-  );
+  return <div className="page-shell parking-page">
+    <nav className="breadcrumbs" aria-label="Ruta de navegación"><Link href="/">Herramientas</Link><span aria-hidden="true">/</span><Link href="/live">Live</Link><span aria-hidden="true">/</span><span aria-current="page">Parking</span></nav>
+    <section className="intro"><p className="eyebrow">LIVE / PARKING</p><h1>Tu webcam.<br/>Tus plazas.</h1><p>Elige un parking, marca sus plazas una vez y sigue su ocupación desde tu navegador. Tu cámara y tu mapa te esperan cuando vuelvas.</p></section>
+    <ParkingWorkspace />
+    <section className="explanation" aria-labelledby="how-heading"><p className="eyebrow">CÓMO FUNCIONA</p><h2 id="how-heading">Un lugar guardado. Una vista más clara.</h2>
+      <div className="explanation-grid"><div><h3>Conecta y marca</h3><p>Usa una URL directa HTTPS de una imagen, vídeo o emisión HLS. Marca las cuatro esquinas de cada plaza sobre una cámara fija. Si cambia el encuadre, tendrás que ajustar el mapa.</p></div><div><h3>Analiza en tu navegador</h3><p>El detector se descarga al iniciar el seguimiento y analiza los vehículos en tu dispositivo. No se envían las imágenes a Kershell. Funciona mientras mantengas esta pestaña visible.</p></div><div><h3>Vuelve a tu cámara</h3><p>La URL y las plazas se guardan en este navegador. No se sincronizan con otros dispositivos. Puedes eliminarlas con «Olvidar cámara».</p></div><div><h3>Si la fuente falla</h3><p>Mostramos un error o dejamos las plazas sin determinar. Algunas cámaras se pueden ver, pero su proveedor no permite analizar las imágenes desde otra web.</p></div></div>
+      <p className="fine-print">¿Buscas una cámara pública? <a href="https://dnr.alaska.gov/parks/units/chugach/glenalpswebcam.htm" target="_blank" rel="noopener noreferrer">Glen Alps, Alaska ↗</a> publica imágenes de su parking cada cinco minutos. En la comprobación inicial permite visualizar, pero no leer los píxeles desde otra web: es un ejemplo de fuente solo de consulta, no una integración de detección verificada.</p>
+      <p className="fine-print">Usa fuentes que tengas derecho a utilizar. La detección es experimental: no garantiza una plaza libre ni reconoce automáticamente los límites del parking. La hora del análisis no certifica que la imagen de origen sea reciente.</p>
+    </section>
+  </div>;
 }
