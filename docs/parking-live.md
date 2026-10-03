@@ -16,9 +16,12 @@ Cada vehículo se vincula a una plaza si su punto de apoyo aproximado (centro ho
 
 La inferencia se ejecuta secuencialmente cada tres segundos; imágenes se solicitan cada 60 segundos. Una fuente de imágenes podría publicar capturas menos frecuentes o congeladas: la UI distingue hora de análisis local de antigüedad de captura, que se declara desconocida. Vídeo pausado/finalizado/sin avance deja las plazas sin determinar. Al ocultar la pestaña se ocultan resultados y se pausa el análisis. Cambiar fuente, editar mapa o detener invalida resultados pendientes.
 
+Antes de inferir se muestrea la imagen a 64 × 64 píxeles. Imágenes transparentes, casi negras/blancas o uniformes dejan todas las plazas sin determinar y se reintentan en el siguiente ciclo. Los umbrales de luminancia (15–245) y desviación mínima (8) son una protección heurística contra capturas vacías, no una validación de visibilidad: no detectan todos los casos de niebla, obstrucción parcial o carteles de error.
+
 ### Límites comprobados
 
 - [Glen Alps, Alaska](https://dnr.alaska.gov/parks/units/chugach/glenalpswebcam.htm) declara refresco de cinco minutos. Su [JPEG directo](https://dnr.alaska.gov/parks/units/chugach/glenalpscam/current2.jpg) devuelve HTTP 200 y se pudo visualizar en la app, pero bloquea lectura de píxeles cross-origin. Se muestra como **solo consulta**, con el seguimiento deshabilitado.
+- El 3 de octubre se revisó también el [parking de Hurricane Ridge (NPS)](https://home.nps.gov/media/webcam/view.htm?id=81B46260-1DD8-B71B-0B7A7B41BF33172A). Su JPEG respondió correctamente, pero sin cabecera CORS incluso enviando el origen local. No se validó precisión con esta cámara. La [demostración de RTSP.me](https://rtsp.me/en/parking.html) contenía una imagen JPEG sin elemento de vídeo ni iframe; no se consideró una emisión verificable.
 - Se usa como prueba técnica de inferencia una imagen estática de vehículo del [repositorio de Ultralytics](https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/bus.jpg), que responde con CORS permitido. No es una webcam ni se incluye como fuente predeterminada del producto.
 - URLs de páginas, YouTube, iframes y RTSP no son entradas compatibles. No se intenta extraer streams ni eludir bloqueos del proveedor. Una URL pública no implica compatibilidad de análisis.
 - El modelo carga pesos desde la ubicación distribuida por TensorFlow; el proveedor de vídeo recibe las peticiones de reproducción normales. Las imágenes no se envían a Kershell ni a una API de inferencia.
@@ -31,7 +34,7 @@ El contrato y monitor de las fases anteriores siguen siendo código probado para
 
 ## Validaciones de esta entrega
 
-- 48 tests: 19 de calculadoras y 29 de parking (contrato anterior, caducidad y configuración/geometría nuevas).
+- 51 tests: 19 de calculadoras y 32 de parking (contrato anterior, caducidad, configuración/geometría y control de imágenes vacías).
 - `pnpm typecheck`, `pnpm build` y `pnpm audit --prod`: correctos; sin vulnerabilidades conocidas notificadas.
 - Navegador: carga de Glen Alps como solo consulta; dibujo de un polígono sobre imagen técnica; detección de un vehículo como ocupado; recarga conserva URL y polígono pero no resultados; reproducción del [HLS de prueba oficial](https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8); URL inexistente muestra error; olvidar cámara persiste tras recarga.
 - Revisión a 320 y 1440 px sin desbordamiento horizontal. La configuración de prueba se eliminó al terminar.
