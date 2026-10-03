@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import './parking.css';
-import { ParkingAvailability } from '@/components/parking-availability';
+import { ParkingLiveAvailability } from '@/components/parking-live-availability';
 import { parkingDemo as demo } from '@/lib/parking/demo';
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function ParkingPage() {
       <section aria-labelledby="parking-heading">
         <div className="section-heading parking-heading"><div><p className="eyebrow">DESTINO PILOTO PROPUESTO</p><h2 id="parking-heading">{demo.destination}</h2></div><span>Integración pendiente</span></div>
         <div className="parking-grid">
-          <ParkingAvailability name={demo.name} availability={demo.availability} />
+          <ParkingLiveAvailability name={demo.name} source={{ mode: 'demo', availability: demo.availability }} />
           <section className="form-panel parking-camera" aria-labelledby="camera-heading">
             <div className="panel-heading"><p className="eyebrow">EVIDENCIA VISUAL</p><h3 id="camera-heading">Webcam del parking</h3><p>El espacio para comprobar lo que muestran los números.</p></div>
             <div className="parking-camera-placeholder">

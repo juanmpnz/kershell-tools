@@ -43,8 +43,28 @@ Ejemplo de forma del contrato (todos los valores son ilustrativos):
 | unavailable | El proveedor devuelve `null`: sin observación | Guiones, nunca cero plazas |
 | error | Respuesta inválida | Guiones y fuente no disponible |
 
-Un futuro proveedor debe convertir timeouts/errores de red en `error`; nunca sustituirlos por datos de demo. La página actual continúa usando exclusivamente la demo y no realiza peticiones externas. Antes de conectar datos reales hay que añadir actualización periódica y expiración en el cliente: una lectura que era reciente al cargar la página no puede permanecer reciente indefinidamente. Mantener sincronizadas las marcas temporales de la imagen y los recuentos, y cubrir fallos de red con pruebas del proveedor.
+Un futuro proveedor debe convertir timeouts/errores de red en `error`; nunca sustituirlos por datos de demo. La página actual continúa usando exclusivamente la demo y no realiza peticiones externas. La actualización periódica y la expiración del cliente ya están implementadas; antes de activar el modo real falta conectar y probar el endpoint con la fuente autorizada. Mantener sincronizadas las marcas temporales de la imagen y los recuentos, y cubrir fallos de red con pruebas del proveedor.
 
 ## Validación
 
 `pnpm test` incluye las pruebas existentes de calculadoras y las del adaptador de parking mediante el runner de Node 24, sin nuevas dependencias. Se cubren caducidad exacta, fechas futuras, recuentos inválidos, plazas desconocidas, confianza ausente, identidad equivocada y distinción entre cero plazas y falta de datos.
+
+
+## Comprobación visual de Bas de station — 3 de octubre de 2026
+
+Se abrió la cámara mediante el botón oficial «Bas de station». En el encuadre observado aparecen el edificio de la estación, una rotonda y accesos, sin un conjunto suficiente de plazas delimitadas que permita validar un contador de disponibilidad. Esto describe solamente la imagen inspeccionada: no demuestra que todos los encuadres del proveedor sean iguales ni que ninguna otra cámara sirva. La fuente continúa sin aprobarse para el piloto. No se descargaron imágenes ni se activó captura periódica.
+
+## Actualización del cliente
+
+`ParkingLiveAvailability` separa explícitamente `mode: 'demo'` de `mode: 'live'`. La ruta pública sigue en demo y no inicia peticiones ni temporizadores. En modo live, el cliente espera un endpoint de nuestra propia aplicación: `/api/live/parking/{parkingId}`. Ese endpoint todavía no existe; no activar el modo live hasta implementar el proveedor autorizado. No se expone una URL configurable de terceros al navegador.
+
+`watchParking` aplica estas reglas, con pruebas de reloj controlado:
+
+- Una petición activa por monitor; siguiente consulta después de completarse la anterior.
+- Timeout configurable con cancelación; respuestas tardías no cambian el estado.
+- Caducidad independiente de la red: el contador desaparece al alcanzar la edad máxima, aunque la siguiente consulta siga pendiente.
+- Error de red o respuesta inválida: no muestra cifras anteriores ni introduce números de demo.
+- Al desmontar o esconder la pestaña, cancela la consulta y los temporizadores. Al volver a la pestaña consulta de nuevo, sin presentar el valor anterior como reciente.
+- Las consultas usan `cache: 'no-store'` y el futuro endpoint deberá responder también sin caché. Los tiempos se decidirán con el proveedor; no hay valores productivos fijados.
+
+Para integrar: implementar el endpoint con acceso de servidor a la fuente aprobada, límites de tiempo y respuestas del contrato v1; probar el modo live de extremo a extremo (incluidos timeout y recuperación); después cambiar la configuración de la página y su copy de demostración. La mera existencia del monitor no habilita datos reales.

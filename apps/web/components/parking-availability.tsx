@@ -29,7 +29,7 @@ export function ParkingAvailability({ name, availability }: { name: string; avai
         <div><dt>Ocupadas{suffix}</dt><dd>{visible?.occupied ?? '—'}</dd></div>
         <div><dt>Disponibles{suffix}</dt><dd>{visible?.available ?? '—'}</dd></div>
         <div><dt>Sin determinar{suffix}</dt><dd>{visible?.unknown ?? '—'}</dd></div>
-        <div><dt>Estado de conexión</dt><dd>{statusLabels[status]}</dd></div>
+        <div><dt>Estado de conexión</dt><dd><span role="status">{statusLabels[status]}</span></dd></div>
         <div><dt>Confianza de detección</dt><dd>{confidence == null ? 'Sin medir' : `${Math.round(confidence * 100)}%`}</dd></div>
         <div><dt>Última captura</dt><dd>{capturedAt ? <time dateTime={capturedAt}>{new Intl.DateTimeFormat('es-ES', { dateStyle: 'short', timeStyle: 'medium', timeZone: 'Europe/Paris' }).format(new Date(capturedAt))} (París)</time> : 'Sin datos reales'}</dd></div>
       </dl>
