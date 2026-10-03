@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import './parking.css';
+import { ParkingAvailability } from '@/components/parking-availability';
+import { parkingDemo as demo } from '@/lib/parking/demo';
 
 export const metadata: Metadata = {
   title: 'Parking Live · Demostración',
@@ -9,13 +11,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-// Fictional snapshot for presentation only; not the actual capacity of Les Angles.
-const demo = { destination: 'Les Angles', name: 'Parking de ejemplo', available: 127, occupied: 183 };
-
 export default function ParkingPage() {
-  const total = demo.available + demo.occupied;
-  const occupancy = Math.round(demo.occupied / total * 100);
-
   return (
     <div className="page-shell parking-page">
       <nav className="breadcrumbs" aria-label="Ruta de navegación"><Link href="/">Herramientas</Link><span aria-hidden="true">/</span><Link href="/live">Live</Link><span aria-hidden="true">/</span><span aria-current="page">Parking</span></nav>
@@ -28,22 +24,7 @@ export default function ParkingPage() {
       <section aria-labelledby="parking-heading">
         <div className="section-heading parking-heading"><div><p className="eyebrow">DESTINO PILOTO PROPUESTO</p><h2 id="parking-heading">{demo.destination}</h2></div><span>Integración pendiente</span></div>
         <div className="parking-grid">
-          <article className="result-panel parking-summary" aria-labelledby="availability-heading">
-            <p className="eyebrow">DATOS SIMULADOS</p>
-            <h3 id="availability-heading">{demo.name}</h3>
-            <p className="result-label">Plazas disponibles · ejemplo</p>
-            <div className="hero-number">{demo.available}<span>/{total}</span></div>
-            <p className="result-caption">{occupancy}% de ocupación en este escenario ilustrativo.</p>
-            <meter className="parking-meter" min={0} max={total} value={demo.occupied} aria-label={`${demo.occupied} de ${total} plazas ocupadas, datos simulados`}>{occupancy}%</meter>
-            <div className="result-divider" />
-            <dl className="result-list">
-              <div><dt>Ocupadas · ejemplo</dt><dd>{demo.occupied}</dd></div>
-              <div><dt>Disponibles · ejemplo</dt><dd>{demo.available}</dd></div>
-              <div><dt>Estado de conexión</dt><dd>Sin conectar</dd></div>
-              <div><dt>Confianza de detección</dt><dd>Sin medir</dd></div>
-              <div><dt>Última actualización</dt><dd>Sin datos reales</dd></div>
-            </dl>
-          </article>
+          <ParkingAvailability name={demo.name} availability={demo.availability} />
           <section className="form-panel parking-camera" aria-labelledby="camera-heading">
             <div className="panel-heading"><p className="eyebrow">EVIDENCIA VISUAL</p><h3 id="camera-heading">Webcam del parking</h3><p>El espacio para comprobar lo que muestran los números.</p></div>
             <div className="parking-camera-placeholder">
@@ -51,6 +32,7 @@ export default function ParkingPage() {
               <strong>Cámara pendiente de conexión</strong>
               <p>Aquí podrás ver el parking cuando incorporemos una fuente autorizada.</p>
             </div>
+            <p className="fine-print"><a href={demo.officialWebcamUrl} target="_blank" rel="noopener noreferrer">Consultar las webcams en la web oficial de Les Angles ↗</a></p>
             <p className="fine-print">La webcam original y la vista con plazas señaladas estarán disponibles en una próxima fase. Esta demostración no reproduce vídeo ni realiza detecciones.</p>
           </section>
         </div>
