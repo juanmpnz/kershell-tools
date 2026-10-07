@@ -4,7 +4,7 @@ Primera intervención: título/descripción concretos para rentabilidad, respues
 
 Cabecera común en las cuatro calculadoras: enlace único de retorno, H1 compacto y descripción corta. Se eliminan breadcrumbs visuales que repetían el título. Espacios menores antes de los inputs y estilo común de paneles. El método, límites y contenido explicativo quedan después de la herramienta, visibles en el HTML generado.
 
-Medición: registrar fecha efectiva del deploy; comparar consultas y páginas durante periodos equivalentes de 28 días, teniendo en cuenta el volumen y antigüedad del sitio. Observar impresiones, clics, posición por consulta y CTR; no juzgar el cambio por unos días o una única posición media. Verificar indexación de alquiler con hipoteca tras publicar. Una posible ampliación futura es una plantilla Excel de rentabilidad; todavía no está implementada ni anunciada como disponible.
+Medición: registrar fecha efectiva del deploy; comparar consultas y páginas durante periodos equivalentes de 28 días, teniendo en cuenta el volumen y antigüedad del sitio. Observar impresiones, clics, posición por consulta y CTR; no juzgar el cambio por unos días o una única posición media. Verificar indexación de alquiler con hipoteca tras publicar. La plantilla Excel de rentabilidad se ofrece en la página de la calculadora. Medir sus descargas en registros agregados del servidor o analítica deliberada, sin enviar los importes introducidos por usuarios.
 
 Orientación oficial consultada el 07-10-2026:
 - https://developers.google.com/search/docs/appearance/ai-features — SEO y contenido útil como base para funciones de IA, sin optimización especial ni garantía de visibilidad.
