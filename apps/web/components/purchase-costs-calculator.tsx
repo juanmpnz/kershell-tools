@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DecimalInput } from './decimal-input';
 import { calculatePurchaseCosts, type PurchaseCostsInput, type PurchaseKind } from '@kershell/calculators';
 
 const initial: Omit<PurchaseCostsInput, 'kind'> = {
@@ -22,7 +23,7 @@ const fields: { key: NumericKey; label: string; hint?: string }[] = [
 export function PurchaseCostsCalculator() {
   const [kind, setKind] = useState<PurchaseKind>('used');
   const [values, setValues] = useState<Record<NumericKey, string>>(() =>
-    Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, String(value)])) as Record<NumericKey, string>
+    Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, value.toFixed(2)])) as Record<NumericKey, string>
   );
   let result: ReturnType<typeof calculatePurchaseCosts> | null = null;
   try {
@@ -73,7 +74,7 @@ export function PurchaseCostsCalculator() {
   function renderField({ key, label, hint }: (typeof fields)[number]) {
     return <div className="field" key={key}>
       <label htmlFor={key}>{label}</label>
-      <div className="input-wrap"><input id={key} type="number" inputMode="decimal" min={key === 'purchasePrice' ? '0.01' : '0'} step="any" value={values[key]} onChange={(event) => setValues((current) => ({ ...current, [key]: event.target.value }))} aria-describedby={hint ? `${key}-hint` : undefined} /><span>€</span></div>
+      <div className="input-wrap"><DecimalInput id={key} min={key === 'purchasePrice' ? '0.01' : '0'} value={values[key]} onValueChange={(value) => setValues((current) => ({ ...current, [key]: value }))} aria-describedby={hint ? `${key}-hint` : undefined} /><span>€</span></div>
       {hint && <p className="field-hint" id={`${key}-hint`}>{hint}</p>}
     </div>;
   }

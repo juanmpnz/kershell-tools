@@ -1,12 +1,15 @@
 import Link from 'next/link';
 
+// Keep these tools implemented while the public catalog focuses on housing.
+const showOtherTools = false;
+
 export default function HomePage() {
   return (
-    <div className="page-shell">
+    <div className="page-shell housing-home">
       <section className="hero">
         <p className="eyebrow">KERSHELL · DECISIONES CON NÚMEROS</p>
         <h1>Las cuentas claras antes de decidir.</h1>
-        <p className="hero-copy">Herramientas sencillas para entender decisiones de vivienda y trabajo. Introduce tus cifras y ve cómo se calcula cada resultado.</p>
+        <p className="hero-copy">Herramientas sencillas para entender decisiones de vivienda. Introduce tus cifras y ve cómo se calcula cada resultado.</p>
       </section>
       <section className="tool-list" aria-labelledby="tools-heading">
         <div className="section-heading"><h2 id="tools-heading">Vivienda</h2><span>01 / Vivienda</span></div>
@@ -22,19 +25,24 @@ export default function HomePage() {
           <div><span className="tool-number">03 — COMPRA</span><h3>Gastos de compra en Cataluña</h3><p>Estima los impuestos de vivienda usada o nueva, añade tus presupuestos y calcula el dinero propio necesario.</p></div>
           <span className="card-arrow" aria-hidden="true">↗</span>
         </Link>
-        <div className="section-heading vertical-heading"><h2>Trabajo</h2><span>02 / Trabajo</span></div>
-        <Link href="/indemnizacion-despido" className="tool-card">
-          <div><span className="tool-number">04 — EMPLEO</span><h3>Indemnización por despido</h3><p>Estima los escenarios de despido objetivo e improcedente en España, con límites y régimen anterior a 2012.</p></div>
-          <span className="card-arrow" aria-hidden="true">↗</span>
-        </Link>
+        {showOtherTools && <>
+          <div className="section-heading vertical-heading"><h2>Trabajo</h2><span>02 / Trabajo</span></div>
+          <Link href="/indemnizacion-despido" className="tool-card">
+            <div><span className="tool-number">04 — EMPLEO</span><h3>Indemnización por despido</h3><p>Estima los escenarios de despido objetivo e improcedente en España, con límites y régimen anterior a 2012.</p></div>
+            <span className="card-arrow" aria-hidden="true">↗</span>
+          </Link>
+        </>}
       </section>
-      <section className="tool-list" aria-labelledby="live-heading">
-        <div className="section-heading vertical-heading"><h2 id="live-heading">Live</h2><span>03 / En desarrollo</span></div>
-        <Link href="/live" className="tool-card">
-          <div><span className="tool-number">05 — DESTINOS</span><h3>Parking Live</h3><p>Conecta tu webcam de parking, marca las plazas y sigue su ocupación. Guarda la cámara y el mapa en tu navegador.</p></div>
-          <span className="card-arrow" aria-hidden="true">↗</span>
-        </Link>
-      </section>
+      {showOtherTools && (
+        <section className="tool-list" aria-labelledby="live-heading">
+          <div className="section-heading vertical-heading"><h2 id="live-heading">Live</h2><span>03 / En desarrollo</span></div>
+          <Link href="/live" className="tool-card">
+            <div><span className="tool-number">05 — DESTINOS</span><h3>Parking Live</h3><p>Conecta tu webcam de parking, marca las plazas y sigue su ocupación. Guarda la cámara y el mapa en tu navegador.</p></div>
+            <span className="card-arrow" aria-hidden="true">↗</span>
+          </Link>
+        </section>
+      )}
+      {/* Despido y Parking se conservan en sus rutas; ocultos en la portada de vivienda. */}
     </div>
   );
 }

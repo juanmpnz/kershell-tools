@@ -7,7 +7,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: 'Kershell Tools | Herramientas para decidir mejor', template: '%s | Kershell Tools' },
-  description: 'Calculadoras claras para tomar decisiones sobre vivienda y trabajo.',
+  description: 'Calculadoras claras para tomar decisiones sobre vivienda.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

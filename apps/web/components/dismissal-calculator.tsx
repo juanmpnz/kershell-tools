@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DecimalInput } from './decimal-input';
 import { calculateDismissalCompensation, type DismissalKind } from '@kershell/calculators';
 
 const money = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 });
@@ -10,7 +11,7 @@ export function DismissalCalculator() {
   const [kind, setKind] = useState<DismissalKind>('objective');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [salary, setSalary] = useState('30000');
+  const [salary, setSalary] = useState('30000.00');
   let result: ReturnType<typeof calculateDismissalCompensation> | null = null;
   if (startDate && endDate && salary.trim()) {
     try {
@@ -28,7 +29,7 @@ export function DismissalCalculator() {
       <div className="fields">
         <div className="field"><label htmlFor="dismissal-start">Fecha de inicio</label><div className="input-wrap"><input id="dismissal-start" type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></div></div>
         <div className="field"><label htmlFor="dismissal-end">Fecha de cese efectivo</label><div className="input-wrap"><input id="dismissal-end" type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} /></div></div>
-        <div className="field"><label htmlFor="dismissal-salary">Salario bruto anual</label><div className="input-wrap"><input id="dismissal-salary" type="number" inputMode="decimal" min="0.01" step="any" value={salary} onChange={(event) => setSalary(event.target.value)} aria-describedby="dismissal-salary-hint" /><span>€</span></div><p className="field-hint" id="dismissal-salary-hint">Incluye pagas extra y retribuciones salariales habituales. Si tu salario varía, consulta el salario regulador aplicable.</p></div>
+        <div className="field"><label htmlFor="dismissal-salary">Salario bruto anual</label><div className="input-wrap"><DecimalInput id="dismissal-salary" min="0.01" value={salary} onValueChange={setSalary} aria-describedby="dismissal-salary-hint" /><span>€</span></div><p className="field-hint" id="dismissal-salary-hint">Incluye pagas extra y retribuciones salariales habituales. Si tu salario varía, consulta el salario regulador aplicable.</p></div>
       </div>
     </div>
     <div className="result-panel" aria-live="polite" aria-atomic="true">
