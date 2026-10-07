@@ -18,6 +18,9 @@ export default function RentalYieldPage() {
         <p>Descubre cuánto puede rendir una vivienda con tus números. La estimación separa ingresos potenciales, meses vacíos y gastos anuales.</p>
       </section>
       <RentalYieldCalculator />
+      <section className="related-tool" aria-label="Calcula con financiación">
+        <Link href="/alquiler-con-hipoteca" className="tool-card"><div><span className="tool-number">¿COMPRARÍAS CON HIPOTECA?</span><h3>Calcula cuánto te quedaría al mes</h3><p>Añade la financiación y descubre el efectivo disponible, el alquiler mínimo y el capital que amortizas.</p></div><span className="card-arrow" aria-hidden="true">↗</span></Link>
+      </section>
       <section className="explanation" aria-labelledby="method-heading">
         <p className="eyebrow">EL MÉTODO</p>
         <h2 id="method-heading">¿Cómo se calcula?</h2>
