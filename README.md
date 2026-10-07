@@ -32,3 +32,7 @@ En `/live/parking`, pega una URL directa HTTPS de imagen, vídeo o HLS; marca la
 ## Alquiler con hipoteca
 
 En `/alquiler-con-hipoteca`, estima el efectivo del primer año de una compra para alquilar con hipoteca nueva: cuota francesa, ocupación, gastos, alquiler de equilibrio y retorno del efectivo sobre aportación inicial. Separa intereses y capital amortizado. Los valores iniciales son un escenario ilustrativo, no tipos de mercado. Consulta [método, fuentes y revisión](docs/rental-mortgage.md).
+
+## Plantilla Excel de rentabilidad
+
+La página de rentabilidad ofrece `/descargas/plantilla-rentabilidad-alquiler.xlsx`. Es una hoja editable con fórmulas propias que reproducen los valores iniciales y los cálculos brutos/netos de `calculateRentalYield`. Los campos amarillos cambian el resultado sin conexión. El archivo es estático, no contiene macros ni envía los datos introducidos. Revisar la hoja si se cambia el método de la calculadora.

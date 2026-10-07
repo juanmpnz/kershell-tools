@@ -5,7 +5,7 @@ import { RentalYieldCalculator } from '@/components/rental-yield-calculator';
 
 export const metadata: Metadata = {
   title: 'Calculadora de rentabilidad de alquiler: bruta y neta',
-  description: 'Calcula gratis la rentabilidad bruta y neta de un piso en alquiler. Incluye gastos de compra, IBI, comunidad y meses vacíos. Sin registro, con ejemplo y fórmula.',
+  description: 'Calcula gratis la rentabilidad bruta y neta de un piso en alquiler. Incluye gastos, meses vacíos, fórmula y plantilla Excel descargable sin registro.',
   alternates: { canonical: '/rentabilidad-alquiler' },
 };
 
@@ -14,6 +14,14 @@ export default function RentalYieldPage() {
     <div className="page-shell calculator-page">
       <CalculatorHeader title="Calculadora de rentabilidad de alquiler" description="Calcula la rentabilidad bruta y neta de un piso con gastos y meses sin inquilino. Gratis, sin registro y antes de impuestos." />
       <RentalYieldCalculator />
+      <section className="download-template" aria-labelledby="download-heading">
+        <div>
+          <p className="eyebrow">LLEVA TUS NÚMEROS</p>
+          <h2 id="download-heading">Plantilla Excel de rentabilidad de alquiler</h2>
+          <p>Introduce el precio, los gastos y los meses vacíos. La hoja calcula la rentabilidad bruta y neta estimada con las mismas fórmulas que esta calculadora. Funciona sin registro.</p>
+        </div>
+        <a href="/descargas/plantilla-rentabilidad-alquiler.xlsx" download="plantilla-rentabilidad-alquiler.xlsx" className="download-button" type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">Descargar Excel (.xlsx) ↓</a>
+      </section>
       <section className="related-tool" aria-label="Calcula con financiación">
         <Link href="/alquiler-con-hipoteca" className="tool-card"><div><span className="tool-number">¿COMPRARÍAS CON HIPOTECA?</span><h3>Calcula cuánto te quedaría al mes</h3><p>Añade la financiación y descubre el efectivo disponible, el alquiler mínimo y el capital que amortizas.</p></div><span className="card-arrow" aria-hidden="true">↗</span></Link>
       </section>
