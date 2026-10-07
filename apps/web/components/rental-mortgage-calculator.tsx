@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DecimalInput } from './decimal-input';
 import { calculateRentalMortgage, type RentalMortgageInput } from '@kershell/calculators';
 
 const initial: RentalMortgageInput = {
@@ -33,7 +34,7 @@ const expenseFields: Field[] = [
 
 export function RentalMortgageCalculator() {
   const [values, setValues] = useState<Record<keyof RentalMortgageInput, string>>(() =>
-    Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, String(value)])) as Record<keyof RentalMortgageInput, string>
+    Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, key === 'vacantMonths' || key === 'termYears' ? String(value) : value.toFixed(2)])) as Record<keyof RentalMortgageInput, string>
   );
   let result: ReturnType<typeof calculateRentalMortgage> | null = null;
   let error = 'Completa todos los campos para calcular el resultado.';
@@ -49,7 +50,7 @@ export function RentalMortgageCalculator() {
     return items.map(({ key, label, suffix, min = 0, max = 1e12, step = 'any', hint }) => (
       <div className="field" key={key}>
         <label htmlFor={`mortgage-${key}`}>{label}</label>
-        <div className="input-wrap"><input id={`mortgage-${key}`} type="number" inputMode={step === 1 ? 'numeric' : 'decimal'} min={min} max={key === 'downPayment' ? Number(values.purchasePrice) : max} step={step} value={values[key]} onChange={(event) => setValues((current) => ({ ...current, [key]: event.target.value }))} aria-describedby={hint ? `mortgage-${key}-hint` : undefined} /><span>{suffix}</span></div>
+        <div className="input-wrap">{key === 'termYears' || key === 'vacantMonths' ? <input id={`mortgage-${key}`} type="number" inputMode={step === 1 ? 'numeric' : 'decimal'} min={min} max={max} step={step} value={values[key]} onChange={(event) => setValues((current) => ({ ...current, [key]: event.target.value }))} /> : <DecimalInput id={`mortgage-${key}`} min={min} max={key === 'downPayment' ? Number(values.purchasePrice) : max} value={values[key]} onValueChange={(value) => setValues((current) => ({ ...current, [key]: value }))} aria-describedby={hint ? `mortgage-${key}-hint` : undefined} />}<span>{suffix}</span></div>
         {hint && <p className="field-hint" id={`mortgage-${key}-hint`}>{hint}</p>}
       </div>
     ));

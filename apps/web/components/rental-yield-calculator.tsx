@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DecimalInput } from './decimal-input';
 import { calculateRentalYield, type RentalYieldInput } from '@kershell/calculators';
 
 const initial: RentalYieldInput = {
@@ -29,7 +30,7 @@ const expenseFields: Field[] = [
 
 export function RentalYieldCalculator() {
   const [values, setValues] = useState<Record<keyof RentalYieldInput, string>>(() =>
-    Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, String(value)])) as Record<keyof RentalYieldInput, string>
+    Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, key === 'vacantMonths' ? String(value) : value.toFixed(2)])) as Record<keyof RentalYieldInput, string>
   );
   let result: ReturnType<typeof calculateRentalYield> | null = null;
   try {
@@ -50,7 +51,7 @@ export function RentalYieldCalculator() {
     return fields.map(({ key, label, suffix, max, hint }) => (
       <div className="field" key={key}>
         <label htmlFor={key}>{label}</label>
-        <div className="input-wrap"><input id={key} type="number" inputMode="decimal" min={key === 'purchasePrice' ? 0.01 : 0} max={max} step={key === 'vacantMonths' ? 0.5 : 'any'} value={values[key]} onChange={(event) => update(key, event.target.value)} aria-describedby={hint ? `${key}-hint` : undefined} /><span>{suffix}</span></div>
+        <div className="input-wrap">{key === 'vacantMonths' ? <input id={key} type="number" inputMode="decimal" min={0} max={max} step={0.5} value={values[key]} onChange={(event) => update(key, event.target.value)} /> : <DecimalInput id={key} min={key === 'purchasePrice' ? 0.01 : 0} max={max} value={values[key]} onValueChange={(value) => update(key, value)} aria-describedby={hint ? `${key}-hint` : undefined} />}<span>{suffix}</span></div>
         {hint && <p className="field-hint" id={`${key}-hint`}>{hint}</p>}
       </div>
     ));
