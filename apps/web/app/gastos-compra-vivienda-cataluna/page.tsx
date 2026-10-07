@@ -1,17 +1,16 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { CalculatorHeader } from '@/components/calculator-header';
 import { PurchaseCostsCalculator } from '@/components/purchase-costs-calculator';
 
 export const metadata: Metadata = {
-  title: 'Gastos de compra de vivienda en Cataluña',
+  title: 'Calculadora de gastos de compra de vivienda en Cataluña',
   description: 'Estima ITP de vivienda usada o IVA y AJD de vivienda nueva en Cataluña, otros gastos y dinero propio necesario. Reglas, fuentes y límites explicados.',
   alternates: { canonical: '/gastos-compra-vivienda-cataluna' },
 };
 
 export default function PurchaseCostsPage() {
-  return <div className="page-shell">
-    <div className="breadcrumbs"><Link href="/">Herramientas</Link><span aria-hidden="true">/</span><span>Gastos de compra en Cataluña</span></div>
-    <section className="intro"><p className="eyebrow">VIVIENDA / COMPRA</p><h1>Gastos de compra en Cataluña</h1><p>Calcula los impuestos y suma tus presupuestos de notaría, registro, gestoría y tasación. Si tienes préstamo, estima cuánto dinero propio necesitas.</p></section>
+  return <div className="page-shell calculator-page">
+    <CalculatorHeader title="Calculadora de gastos de compra en Cataluña" description="Estima impuestos y gastos de vivienda usada o nueva, y el dinero propio necesario con tus presupuestos." />
     <PurchaseCostsCalculator />
     <section className="explanation" aria-labelledby="method-heading">
       <p className="eyebrow">EL MÉTODO</p><h2 id="method-heading">¿Cómo se calcula?</h2>
