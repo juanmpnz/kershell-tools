@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { CalculatorHeader } from '@/components/calculator-header';
 import { DismissalCalculator } from '@/components/dismissal-calculator';
 
 export const metadata: Metadata = {
@@ -9,9 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function DismissalPage() {
-  return <div className="page-shell">
-    <div className="breadcrumbs"><Link href="/">Herramientas</Link><span aria-hidden="true">/</span><span>Indemnización por despido</span></div>
-    <section className="intro"><p className="eyebrow">TRABAJO / ESPAÑA</p><h1>Indemnización por despido</h1><p>Una estimación transparente con tu salario bruto, la fecha de entrada y la de cese. Compara el escenario objetivo y el improcedente sin confundir la indemnización con el finiquito.</p></section>
+  return <div className="page-shell calculator-page">
+    <CalculatorHeader title="Calculadora de indemnización por despido" description="Estima los escenarios de despido objetivo e improcedente en España con tu salario y fechas de contrato." />
     <DismissalCalculator />
     <section className="explanation" aria-labelledby="method-heading">
       <p className="eyebrow">EL MÉTODO</p><h2 id="method-heading">¿Cómo se calcula?</h2>

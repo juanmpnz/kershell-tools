@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CalculatorHeader } from '@/components/calculator-header';
 import Link from 'next/link';
 import { RentalMortgageCalculator } from '@/components/rental-mortgage-calculator';
 
@@ -10,13 +11,8 @@ export const metadata: Metadata = {
 
 export default function RentalMortgagePage() {
   return (
-    <div className="page-shell">
-      <div className="breadcrumbs"><Link href="/">Herramientas</Link><span aria-hidden="true">/</span><span>Alquiler con hipoteca</span></div>
-      <section className="intro">
-        <p className="eyebrow">VIVIENDA / INVERSIÓN</p>
-        <h1>¿Cuánto te queda del alquiler con hipoteca?</h1>
-        <p>Calcula el dinero disponible después de gastos y cuotas. Compara escenarios de compra para alquilar y distingue el efectivo que te queda de la deuda que amortizas.</p>
-      </section>
+    <div className="page-shell calculator-page">
+      <CalculatorHeader title="Calculadora de alquiler con hipoteca" description="Calcula cuánto dinero te queda después de gastos y cuotas: efectivo mensual, alquiler mínimo y capital amortizado." />
       <RentalMortgageCalculator />
       <section className="explanation" aria-labelledby="mortgage-method">
         <p className="eyebrow">EL MÉTODO</p><h2 id="mortgage-method">Las cuentas del primer año</h2>
